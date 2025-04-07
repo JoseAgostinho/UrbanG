@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #Variaveis
-RESOURCE_GROUP="urbangeist-rg"
+RESOURCE_GROUP="urbangeistjose-rg"
 LOCATION="francecentral"
-APP_NAME="urbangeist-app"
-COSMOSDB_NAME="urbangeist-db"
-BD_NAME="urbangeist"
-STORAGE_ACCOUNT="urbangeiststorage"
-FUNCTION_APP="urbangeist-function"
+APP_NAME="urbangeistjose-app"
+COSMOSDB_NAME="urbangeistjose-db"
+BD_NAME="urbangeistjose"
+STORAGE_ACCOUNT="urbangeiststoragejose"
+FUNCTION_APP="urbangeist-functionjose"
 
 #Criar Resource Group
 az group create --name $RESOURCE_GROUP \
