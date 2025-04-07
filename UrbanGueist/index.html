@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanGeist</title>
+    <link rel="stylesheet" href="home.css">
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css">
+    <script src="js/cosmosdb.js" defer></script>
+</head>
+<body>
+    <header class="header">
+        <nav>
+            <div class="nav-title">
+                <h2><a href="">UrbanGeist <img src="images/map.png" class="header-imgs" alt="icon"></a></h2>
+            </div>
+            <div class="nav-links">
+                <ul>
+                    <li><a href="authentication.html"><img src="images/perfil.png" class="header-imgs" alt="Perfil"></a></li>
+                    <li>
+                        <div class="search-bar">
+                            <input type="text" id="searchInput" placeholder="Pesquisar locais, eventos...">
+                            <button id="searchBtn">🔍</button>
+                        </div>
+                    </li>
+                </ul> 
+            </div>
+        </nav>
+        <hr>
+    </header>
+
+    <main class="middle-container" id="explora">
+        <div class="mapa">
+            <div id="map" style="height: 400px; width: 100%;"></div>
+        </div>
+
+        <div class="container">
+            <div class="nav-links" style="display:flex; justify-content:end;">
+                <ul>
+                    <li><img src="images/lista.png" alt="Lista" onclick="verLista()" style="width: 16px;"></li>
+                    <li><img src="images/grelha.png" alt="Grelha" onclick="verGrelha()" style="width: 16px;"></li>
+                </ul> 
+            </div>
+
+            <nav class="categories">
+                <ul id="filtros">
+                    <!-- <li class="active" data-category="Todos"><a href="#">Todos</a></li>
+                    <li data-category="Lazer"><a href="#">Lazer</a></li>
+                    <li data-category="Eventos"><a href="#">Eventos</a></li>
+                    <li data-category="Cultura"><a href="#">Cultura</a></li>
+                    <li data-category="Natureza"><a href="#">Natureza</a></li>
+                    <li data-category="Culinaria"><a href="#">Culinária</a></li> -->
+                </ul>
+            </nav>
+
+            <div class="content" id="resultados">
+                <!-- Os locais/eventos serão carregados dinamicamente aqui via cosmosdb.js -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <h4>UrbanGeist</h4>
+        <p id="direitos">© 2025 UrbanGeist, Todos os direitos reservados</p>
+        <div class="nav-footer">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">Sobre Nós</a></li>
+            </ul>
+        </div>   
+    </footer>
+
+    <script>
+        document.getElementById("searchBtn").addEventListener("click", function () {
+            const query = document.getElementById("searchInput").value;
+            if (query.trim() !== "") {
+            // Aqui fazes o fetch ao CosmosDB filtrado, por exemplo:
+            // fetch(`api/pesquisa?q=${encodeURIComponent(query)}`)
+            console.log("Pesquisando por:", query);
+            }
+        });
+
+        const map = new atlas.Map('map', {
+            center: [-9.14, 38.73], // Lisboa por exemplo
+            zoom: 11,
+            authOptions: {
+                authType: 'subscriptionKey',
+                subscriptionKey: 'SUA_CHAVE_DO_AZURE_MAPS'
+            }
+        });
+        map.events.add('ready', () => {
+            console.log("Mapa pronto!");
+        });
+
+
+        async function carregarCategorias() {
+            const resposta = await fetch('/api/categorias');
+            const categorias = await resposta.json();
+
+            const container = document.getElementById('filtros');
+            categorias.forEach(cat => {
+            const botao = document.createElement('button');
+            botao.textContent = cat.nome; // ex: "Natureza", "Eventos"
+            botao.classList.add('px-4', 'py-2', 'bg-gray-200', 'rounded', 'hover:bg-gray-300');
+            botao.addEventListener('click', () => filtrarPorCategoria(cat.nome));
+            container.appendChild(botao);
+            });
+        }
+        carregarCategorias();
+
+        let modoGrelha = true;
+
+        function verLista() {
+            modoGrelha = false;
+            document.getElementById('resultados').className = 'flex flex-col gap-4 p-4';
+            renderLocais();
+        }
+
+        function verGrelha() {
+            modoGrelha = true;
+            document.getElementById('resultados').className = 'grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3';
+            renderLocais();
+        }
+
+        function renderLocais() {
+            // Aqui irás buscar os locais do backend/CosmosDB e criar os cartões dinamicamente
+            // Exemplo:
+            /*
+            locais.forEach(local => {
+                const card = document.createElement('div');
+                card.className = modoGrelha ? 'bg-white shadow rounded p-4' : 'flex items-center bg-white shadow rounded p-4';
+                card.innerHTML = `<h3>${local.name}</h3><p>${local.description}</p>`;
+                container.appendChild(card);
+            });
+            */
+        }
+    </script>
+</body>
+</html>
