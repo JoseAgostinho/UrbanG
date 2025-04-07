@@ -97,7 +97,7 @@ az functionapp create --resource-group $RESOURCE_GROUP \
 #Configurar GitHub
 az webapp deployment source config --name $APP_NAME \
                                    --resource-group $RESOURCE_GROUP \
-                                   --repo-url https://github.com/Teresa-ipcb/cn.git \
+                                   --repo-url https://github.com/JoseAgostinho/UrbanG.git \
                                    --branch master \
                                    --repository-type github
 								   
